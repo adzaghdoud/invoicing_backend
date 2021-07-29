@@ -1,0 +1,9 @@
+com\invoicing\dao\TransacationsDaoImpl.class
+com\invoicing\dao\AbstractDao.class
+com\invoicing\service\TransactionsService.class
+com\invoicing\service\TransactionsServiceImpl.class
+com\invoicing\model\Transaction.class
+com\invoicing\dao\TransactionsDao.class
+com\invoicing\hibernate\configuration\HibernateConfiguration.class
+com\invoicing\hibernate\configuration\AppConfig.class
+com\invoicing\main\App.class
