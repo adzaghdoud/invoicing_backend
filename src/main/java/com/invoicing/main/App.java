@@ -6,6 +6,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jboss.jandex.Main;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,15 +26,16 @@ public class App
 {
     public static void main( String[] args )
     {
-       
-          
-    	  System.out.println("***************************Début Import Transactions Bank*********************");
+    	final org.apache.logging.log4j.Logger log =  LogManager.getLogger(App.class);
+         if (args.length >0) { 
+         log.info("***************************Début Import Transactions Bank*********************");
+         log.info("****************************lancement avec le json  "+args[0]);
          AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);	
  		 TransactionsService srvtransaction = (TransactionsService) context.getBean("TransactionsService");
-    	  JSONParser jsonParser = new JSONParser();
+    	 JSONParser jsonParser = new JSONParser();
   		JSONObject jsonObject;
 		try {
-			jsonObject = (JSONObject) jsonParser.parse(new FileReader(System.getProperty("Filepath")));
+			jsonObject = (JSONObject) jsonParser.parse(new FileReader(args[0]));
 			JSONArray jsonArray = (JSONArray) jsonObject.get("transactions");
 	  		 Iterator<JSONObject> iterator = jsonArray.iterator();
 	              int nb=0;
@@ -38,33 +43,28 @@ public class App
 	        	   JSONObject str = iterator.next();
 	        	   Transaction t = new Gson().fromJson(str.toString(), Transaction.class);
 	        	   if (srvtransaction.checkexistancetransaction(t.getTransaction_id())) {
-	        	   System.out.println("Import nouvelle transaction: "+t.getTransaction_id());
-	        	   //srvtransaction.addtransaction(t);    
+	        	   log.info("Import nouvelle transaction: "+t.getTransaction_id());
+	        	   srvtransaction.addtransaction(t);    
 	               nb ++;
 	        	   }
-	        	   else System.out.println("La transaction "+t.getTransaction_id()+" existe déja en BDD");
+	        	   else log.info("La transaction "+t.getTransaction_id()+" existe déja en BDD");
 	        	   }
+	          
+	           log.info("***************************Fin Import Transactions Bank , "+nb+" Nouvelles transactions importees************************");
 	           context.close();
-	           System.out.println("***************************Fin Import Transactions Bank , "+nb+" Nouvelles transactions importees************************");
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(ExceptionUtils.getStackTrace(e));
 		}
   		 
-    }
-
- 
     
-    
-    
-    
-    
+  
+         }else {
+        	 
+        	 log.error("Argument manquant , il faut mettre le path du json"); 
+         }
+         
+         }  
     }
     
 
