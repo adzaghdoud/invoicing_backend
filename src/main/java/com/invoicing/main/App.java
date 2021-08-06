@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Iterator;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -43,8 +45,22 @@ public class App
 	        	   JSONObject str = iterator.next();
 	        	   Transaction t = new Gson().fromJson(str.toString(), Transaction.class);
 	        	   if (srvtransaction.checkexistancetransaction(t.getTransaction_id())) {
-	        	   log.info("Import nouvelle transaction: "+t.getTransaction_id());
-	        	   srvtransaction.addtransaction(t);    
+	        	   // reformat date and time
+	        		 String date;
+	        		 String time;
+	        		 date = t.getSettled_at().substring(0, t.getSettled_at().indexOf("T"));
+	      			 time = t.getSettled_at().substring(t.getSettled_at().indexOf("T")+1,t.getSettled_at().indexOf("Z")-4 );
+	      			 t.setSettled_at(date+" "+time);
+
+	      			 date = t.getUpdated_at().substring(0, t.getUpdated_at().indexOf("T"));
+	      			 time = t.getUpdated_at().substring(t.getUpdated_at().indexOf("T")+1,t.getUpdated_at().indexOf("Z")-4 );
+	        		 t.setUpdated_at(date+" "+time);
+	        	     log.info("Import nouvelle transaction: "+t.getTransaction_id() +" de type "+t.getSide()+" avec un montant "+t.getAmount()+" "+t.getCurrency());
+	        	     if (t.getSide().contentEquals("credit") && t.getAmount()>1) {
+	        	      t.setAmount_HT(t.getAmount()/1.2);
+	        	     }
+	        	     srvtransaction.addtransaction(t);
+	        	 
 	               nb ++;
 	        	   }
 	        	   else log.info("La transaction "+t.getTransaction_id()+" existe déja en BDD");

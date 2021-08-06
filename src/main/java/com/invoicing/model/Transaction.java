@@ -18,6 +18,7 @@ public class Transaction {
 	private String settled_at;
 	private String updated_at;
 	private String reference;
+	private double amount_HT;
 	public String getTransaction_id() {
 		return transaction_id;
 	}
@@ -77,6 +78,12 @@ public class Transaction {
 	}
 	public void setReference(String reference) {
 		this.reference = reference;
+	}
+	public double getAmount_HT() {
+		return amount_HT;
+	}
+	public void setAmount_HT(double d) {
+		this.amount_HT = d;
 	}
 	
 
