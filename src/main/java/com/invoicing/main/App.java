@@ -1,6 +1,7 @@
 package com.invoicing.main;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -35,8 +36,15 @@ public class App
          AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);	
  		 TransactionsService srvtransaction = (TransactionsService) context.getBean("TransactionsService");
     	 JSONParser jsonParser = new JSONParser();
-  		JSONObject jsonObject;
-		try {
+  		 JSONObject jsonObject;
+  		File file = new File(args[0]);
+  		if(file.length() == 0) {
+  			log.error(args[0]+" est vide");
+  		}
+  		
+  		else {
+  		
+  		 try {
 			jsonObject = (JSONObject) jsonParser.parse(new FileReader(args[0]));
 			JSONArray jsonArray = (JSONArray) jsonObject.get("transactions");
 	  		 Iterator<JSONObject> iterator = jsonArray.iterator();
@@ -73,7 +81,7 @@ public class App
 			log.error(ExceptionUtils.getStackTrace(e));
 		}
   		 
-    
+  		}
   
          }else {
         	 
