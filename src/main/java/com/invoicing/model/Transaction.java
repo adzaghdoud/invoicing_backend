@@ -19,6 +19,7 @@ public class Transaction {
 	private String updated_at;
 	private String reference;
 	private double amount_HT;
+	private String company;
 	public String getTransaction_id() {
 		return transaction_id;
 	}
@@ -84,6 +85,12 @@ public class Transaction {
 	}
 	public void setAmount_HT(double d) {
 		this.amount_HT = d;
+	}
+	public String getCompany() {
+		return company;
+	}
+	public void setCompany(String company) {
+		this.company = company;
 	}
 	
 

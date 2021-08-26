@@ -31,7 +31,7 @@ public class App
     {
     	final org.apache.logging.log4j.Logger log =  LogManager.getLogger(App.class);
          if (args.length >0) { 
-         log.info("***************************Début Import Transactions Bank*********************");
+         log.info("***************************Début Import Transactions Bank pour "+args[1]+"*********************");
          log.info("****************************lancement avec le json  "+args[0]);
          AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);	
  		 TransactionsService srvtransaction = (TransactionsService) context.getBean("TransactionsService");
@@ -39,7 +39,7 @@ public class App
   		 JSONObject jsonObject;
   		File file = new File(args[0]);
   		if(file.length() == 0) {
-  			log.error(args[0]+" est vide");
+  		log.error(args[0]+"est vide");	
   		}
   		
   		else {
@@ -67,6 +67,7 @@ public class App
 	        	     if (t.getSide().contentEquals("credit") && t.getAmount()>1) {
 	        	      t.setAmount_HT(t.getAmount()/1.2);
 	        	     }
+	        	     t.setCompany(args[1].toUpperCase());
 	        	     srvtransaction.addtransaction(t);
 	        	 
 	               nb ++;
@@ -85,7 +86,7 @@ public class App
   
          }else {
         	 
-        	 log.error("Argument manquant , il faut mettre le path du json"); 
+        	 log.error("Argument manquant , il faut mettre le path du json et le company"); 
          }
          
          }  
