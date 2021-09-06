@@ -42,7 +42,12 @@ package com.invoicing.hibernate.configuration;
 	        dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
 	        dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
 	        dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
+	        if (System.getProperty("env").contentEquals("prod")) {
+	        	dataSource.setPassword(environment.getRequiredProperty("prod.jdbc.password"));
+	        }
+	        else {
 	        dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
+	        }
 	        return dataSource;
 	    }
 	     

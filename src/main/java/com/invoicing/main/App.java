@@ -7,7 +7,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -23,7 +25,9 @@ import org.springframework.context.support.AbstractApplicationContext;
 import com.google.gson.Gson;
 import com.invoicing.hibernate.configuration.AppConfig;
 import com.invoicing.model.Transaction;
+import com.invoicing.service.CompanyService;
 import com.invoicing.service.TransactionsService;
+import com.invoicing.tools.Sendmail;
 
 public class App 
 {
@@ -35,6 +39,7 @@ public class App
          log.info("****************************lancement avec le json  "+args[0]);
          AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);	
  		 TransactionsService srvtransaction = (TransactionsService) context.getBean("TransactionsService");
+ 		 CompanyService srvcompany = (CompanyService) context.getBean("CompanyService");
     	 JSONParser jsonParser = new JSONParser();
   		 JSONObject jsonObject;
   		File file = new File(args[0]);
@@ -48,12 +53,15 @@ public class App
 			jsonObject = (JSONObject) jsonParser.parse(new FileReader(args[0]));
 			JSONArray jsonArray = (JSONArray) jsonObject.get("transactions");
 	  		 Iterator<JSONObject> iterator = jsonArray.iterator();
-	              int nb=0;
-	  		      while (iterator.hasNext()) {
-	        	   JSONObject str = iterator.next();
-	        	   Transaction t = new Gson().fromJson(str.toString(), Transaction.class);
-	        	   if (srvtransaction.checkexistancetransaction(t.getTransaction_id())) {
-	        	   // reformat date and time
+	  		 ArrayList<Transaction> listc = new ArrayList<Transaction>();
+	  		
+	                 int nb=0;
+	  		         while (iterator.hasNext()) {
+	        	     JSONObject str = iterator.next();
+	        	     Transaction t = new Gson().fromJson(str.toString(), Transaction.class);
+	        	     if (srvtransaction.checkexistancetransaction(t.getTransaction_id())) {
+	        		 listc.add(t);
+	        		 // reformat date and time
 	        		 String date;
 	        		 String time;
 	        		 date = t.getSettled_at().substring(0, t.getSettled_at().indexOf("T"));
@@ -76,6 +84,40 @@ public class App
 	        	   }
 	          
 	           log.info("***************************Fin Import Transactions Bank , "+nb+" Nouvelles transactions importees************************");
+	           //sending mail
+	           if (listc.size() >0 ) {
+	        	 Sendmail s = new Sendmail();
+	        	 s.setMailto(srvcompany.find_email_company(args[1]));
+	        	 s.setSubject("Importations transactions bancaires");
+	        	 String text=
+	        			 "Bonjour ,"
+	        			 +"<br/>"
+	        			 +"<p> Ci-joint les nouvelles transactions importées </p>"
+	        			 +"<br/>"
+	        	         +"<table width='100%' border='1' align='center'>"
+	        	                + "<tr align='center'>"
+	        	                + "<td><b>Transaction ID <b></td>"
+	        	                + "<td><b>Side <b></td>"
+	        	                + "<td><b>Amount<b></td>"
+	        	                + "<td><b>Currency<b></td>"
+	        	                + "<td><b>Reference<b></td>"
+	        	                + "<td><b>Label<b></td>"
+	        	                + "</tr>";
+	        	 for(int i=0 ;  i<listc.size(); i++) {
+	        		 text=text+"<tr>"
+	        	             +"<td>"+listc.get(i).getTransaction_id()+"</td>"
+	        	             +"<td>"+listc.get(i).getSide()+"</td>"
+	        				 +"<td>"+listc.get(i).getAmount()+"</td>"
+	        				 +"<td>"+listc.get(i).getCurrency()+"</td>"
+	        				 +"<td>"+listc.get(i).getReference()+"</td>"
+	        				 +"<td>"+listc.get(i).getLabel()+"</td></tr>";
+	        	 }
+	           text=text+"</table> <br/> <p> Cordialement </p> <br/>";
+	           s.setContain(text);
+	           s.sendmail();
+	           }
+	           
+	          
 	           context.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
