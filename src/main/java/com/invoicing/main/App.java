@@ -105,12 +105,19 @@ public class App
 	        	                + "</tr>";
 	        	 for(int i=0 ;  i<listc.size(); i++) {
 	        		 text=text+"<tr>"
-	        	             +"<td>"+listc.get(i).getTransaction_id()+"</td>"
-	        	             +"<td>"+listc.get(i).getSide()+"</td>"
-	        				 +"<td>"+listc.get(i).getAmount()+"</td>"
-	        				 +"<td>"+listc.get(i).getCurrency()+"</td>"
-	        				 +"<td>"+listc.get(i).getReference()+"</td>"
-	        				 +"<td>"+listc.get(i).getLabel()+"</td></tr>";
+	        	             +"<td align='center'>"+listc.get(i).getTransaction_id()+"</td>";
+	        		 if (listc.get(i).getSide().contentEquals("debit")) {	 
+	        	             text=text+"<td  align='center'><span style='color: red;'>"+listc.get(i).getSide()+"</span></td>";
+	        				
+	        		 }
+	        		 else {
+	            		
+	        			 text=text+"<td align='center'><span style='color: green;'>"+listc.get(i).getSide()+"</span></td>";
+	        		 }
+	        		 text=text+"<td  align='center'>"+listc.get(i).getAmount()+"</td>"
+	        				 +"<td  align='center'>"+listc.get(i).getCurrency()+"</td>"
+	        				 +"<td  align='center'>"+listc.get(i).getReference()+"</td>"
+	        				 +"<td  align='center'>"+listc.get(i).getLabel()+"</td></tr>";
 	        	 }
 	           text=text+"</table> <br/> <p> Cordialement </p> <br/>";
 	           s.setContain(text);
