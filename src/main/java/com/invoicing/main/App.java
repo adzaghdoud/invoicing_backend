@@ -90,7 +90,7 @@ public class App
 	        	 s.setMailto(srvcompany.find_email_company(args[1]));
 	        	 s.setSubject("Importations transactions bancaires");
 	        	 String text=
-	        			 "Bonjour ,"
+	        			 "Bonjour "+args[1]+","
 	        			 +"<br/>"
 	        			 +"<p> Ci-joint les nouvelles transactions importées </p>"
 	        			 +"<br/>"
