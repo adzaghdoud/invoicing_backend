@@ -119,7 +119,7 @@ public class App
 	        				 +"<td  align='center'>"+listc.get(i).getReference()+"</td>"
 	        				 +"<td  align='center'>"+listc.get(i).getLabel()+"</td></tr>";
 	        	 }
-	           text=text+"</table> <br/> <p> Cordialement </p> <br/>";
+	           text=text+"</table> <br/> <p> Cordialement </p> <br/> Email envoyé automatiquement par invoicing backend batch";
 	           s.setContain(text);
 	           s.sendmail();
 	           }
