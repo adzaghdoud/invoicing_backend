@@ -92,7 +92,7 @@ public class App
 	        	 String text=
 	        			 "Bonjour "+args[1]+","
 	        			 +"<br/>"
-	        			 +"<p> Ci-joint les nouvelles transactions importées </p>"
+	        			 +"<p> Ci-dessous les nouvelles transactions importées </p>"
 	        			 +"<br/>"
 	        	         +"<table width='100%' border='1' align='center'>"
 	        	                + "<tr align='center'>"
