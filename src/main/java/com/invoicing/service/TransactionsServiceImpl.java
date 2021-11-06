@@ -1,5 +1,6 @@
 package com.invoicing.service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -29,6 +30,10 @@ public class TransactionsServiceImpl implements TransactionsService {
 	public boolean checkexistancetransaction(String transactionID) {
 		// TODO Auto-generated method stub
 		return dao.checkexistancetransaction(transactionID);
+	}
+
+	public void addtracking(String t, int nbtransaction, String state, String comment, String company) {
+		dao.addtracking(t, nbtransaction, state, comment, company);
 	}
 
 }

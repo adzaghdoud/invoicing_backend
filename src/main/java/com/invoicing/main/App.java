@@ -6,8 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -42,7 +45,11 @@ public class App
  		 CompanyService srvcompany = (CompanyService) context.getBean("CompanyService");
     	 JSONParser jsonParser = new JSONParser();
   		 JSONObject jsonObject;
-  		File file = new File(args[0]);
+  	     File file = new File(args[0]);
+		 Date mydate = new Date();
+         Timestamp ts=new Timestamp(mydate.getTime());
+         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+  	     
   		if(file.length() == 0) {
   		log.error(args[0]+"est vide");	
   		}
@@ -76,15 +83,20 @@ public class App
 	        	      t.setAmount_HT(t.getAmount()/1.2);
 	        	     }
 	        	     t.setCompany(args[1].toUpperCase());
+	        	     try {
 	        	     srvtransaction.addtransaction(t);
-	        	 
-	               nb ++;
+	        	     nb ++;
+	        	     }catch (Exception e) {
+	        	     srvtransaction.addtracking(formatter.format(mydate), nb, "KO", "Erreur importation transaction "+t.getTransaction_id() + " avec un montant de "+t.getAmount(), args[1]);
+	        	     }
+	               
 	        	   }
 	        	   else log.info("La transaction "+t.getTransaction_id()+" existe déja en BDD");
 	        	   }
-	          
-	           log.info("***************************Fin Import Transactions Bank , "+nb+" Nouvelles transactions importees************************");
-	           //sending mail
+	          log.info("***************************Fin Import Transactions Bank , "+nb+" Nouvelles transactions importees************************");
+	          // tracking import 
+	          srvtransaction.addtracking(formatter.format(mydate), nb, "OK", "", args[1]);
+	          //sending mail
 	           if (listc.size() >0 ) {
 	        	 Sendmail s = new Sendmail();
 	        	 s.setMailto(srvcompany.find_email_company(args[1]));

@@ -4,8 +4,15 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.NamedNativeQuery;
+
 @Entity
 @Table(name="transactions")
+@NamedNativeQuery(
+        name = "add_tracking_import",
+        query = "insert into suivi_import (date,nb_transaction_imported,state,comment,company)values(?,?,?,?,?)",
+                    resultClass=Transaction.class
+    )
 public class Transaction {
 	@Id
 	private String transaction_id;
