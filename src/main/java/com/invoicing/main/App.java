@@ -63,6 +63,8 @@ public class App
 	  		 ArrayList<Transaction> listc = new ArrayList<Transaction>();
 	  		
 	                 int nb=0;
+	                 int nb_credit=0;
+	                 int nb_debit=0;
 	  		         while (iterator.hasNext()) {
 	        	     JSONObject str = iterator.next();
 	        	     Transaction t = new Gson().fromJson(str.toString(), Transaction.class);
@@ -84,18 +86,26 @@ public class App
 	        	     }
 	        	     t.setCompany(args[1].toUpperCase());
 	        	     try {
+	        	     if (t.getSide().contentEquals("credit")) {
+	        	     nb_credit++;	 
+	        	     }
+	        	     if (t.getSide().contentEquals("debit")) {
+	        	     nb_debit++;	 
+		        	 }
+	        	     
 	        	     srvtransaction.addtransaction(t);
 	        	     nb ++;
 	        	     }catch (Exception e) {
-	        	     srvtransaction.addtracking(formatter.format(mydate), nb, "KO", "Erreur importation transaction "+t.getTransaction_id() + " avec un montant de "+t.getAmount(), args[1]);
+	        	     srvtransaction.addtracking(formatter.format(mydate), nb, nb_credit,nb_debit,"KO","Erreur importation transaction "+t.getTransaction_id() + " avec un montant de "+t.getAmount(), args[1]);
 	        	     }
 	               
 	        	   }
 	        	   else log.info("La transaction "+t.getTransaction_id()+" existe déja en BDD");
 	        	   }
-	          log.info("***************************Fin Import Transactions Bank , "+nb+" Nouvelles transactions importees************************");
+	          
+	  		    log.info("***************************Fin Import Transactions Bank , "+nb+" Nouvelles transactions importees************************");
 	          // tracking import 
-	          srvtransaction.addtracking(formatter.format(mydate), nb, "OK", "", args[1]);
+	          srvtransaction.addtracking(formatter.format(mydate), nb,nb_credit,nb_debit, "OK", "", args[1]);
 	          //sending mail
 	           if (listc.size() >0 ) {
 	        	 Sendmail s = new Sendmail();

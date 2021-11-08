@@ -10,5 +10,5 @@ public interface TransactionsDao {
 void addtransaction(Transaction t);
 List<Transaction> getlist();
 boolean checkexistancetransaction(String transactionID);
-void addtracking(String t,int nbtransaction , String state , String comment , String company);
+void addtracking(String t,int nbtransaction ,int nb_credit,int nb_debit, String state , String comment , String company);
 }

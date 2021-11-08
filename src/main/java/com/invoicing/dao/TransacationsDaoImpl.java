@@ -49,13 +49,16 @@ import com.invoicing.model.Transaction;
 			
 	}
 
-		public void addtracking(String t, int nbtransaction, String state, String comment, String company) {
+		public void addtracking(String t, int nbtransaction,int nb_credit,int nb_debit,String state, String comment, String company) {
 			javax.persistence.Query query = getSession().createNamedQuery("add_tracking_import", Transaction.class);
 			query.setParameter(1, t);
 			query.setParameter(2, nbtransaction);
-			query.setParameter(3, state);
-			query.setParameter(4, comment);
-			query.setParameter(5, company);
+			query.setParameter(3, nb_credit);
+			query.setParameter(4, nb_debit);
+			query.setParameter(5, state);
+			query.setParameter(6, comment);
+			query.setParameter(7, company);
+			
 			query.executeUpdate();	
 		}
 }

@@ -9,5 +9,5 @@ public interface TransactionsService {
 	void addtransaction(Transaction t);
 	List<Transaction> getlist();
 	boolean checkexistancetransaction(String transactionID);
-	void addtracking(String  t,int nbtransaction , String state , String comment , String company);
+	void addtracking(String  t,int nbtransaction ,int nb_debit, int nb_credit,String state , String comment , String company);
 }
