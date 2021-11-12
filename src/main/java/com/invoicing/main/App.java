@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
@@ -65,11 +66,33 @@ public class App
 	                 int nb=0;
 	                 int nb_credit=0;
 	                 int nb_debit=0;
-	  		         while (iterator.hasNext()) {
+	                 double total_credit=0;
+	                 double total_debit=0;
+	                 double in =0;
+	                 double out=0;
+	                 // calculate balance before import
+	                 List<Transaction> my_transactions=srvtransaction.getlist();
+	                 for (int i=0 ; i<my_transactions.size() ; i++) {
+	                	if (my_transactions.get(i).getSide().contentEquals("credit")) {
+	                		in+=my_transactions.get(i).getAmount();
+	                	}
+	                	
+	                	if (my_transactions.get(i).getSide().contentEquals("debit")) {
+	                		out+=my_transactions.get(i).getAmount();
+	                	}
+	                	
+	                 }       
+	             	 BigDecimal bd = BigDecimal.valueOf(in);
+	        		 BigDecimal bd2 = BigDecimal.valueOf(out);
+	        		 BigDecimal result=bd.subtract(bd2);
+	        		 result = result.setScale(2, RoundingMode.DOWN);  
+	        		 double balance= result.doubleValue();
+	        		 double new_balance=balance;	 
+	        		 while (iterator.hasNext()) {
 	        	     JSONObject str = iterator.next();
 	        	     Transaction t = new Gson().fromJson(str.toString(), Transaction.class);
 	        	     if (srvtransaction.checkexistancetransaction(t.getTransaction_id())) {
-	        		 listc.add(t);
+	        		 listc.add(t); 		 
 	        		 // reformat date and time
 	        		 String date;
 	        		 String time;
@@ -87,25 +110,27 @@ public class App
 	        	     t.setCompany(args[1].toUpperCase());
 	        	     try {
 	        	     if (t.getSide().contentEquals("credit")) {
-	        	     nb_credit++;	 
+	        	     nb_credit++;
+	        	     new_balance+=t.getAmount();
+	        	     total_credit+=t.getAmount();
 	        	     }
 	        	     if (t.getSide().contentEquals("debit")) {
-	        	     nb_debit++;	 
-		        	 }
-	        	     
+	        	     nb_debit++;
+	        	     new_balance=new_balance-t.getAmount();
+	        	     total_debit+=t.getAmount();
+		        	 }  
 	        	     srvtransaction.addtransaction(t);
 	        	     nb ++;
 	        	     }catch (Exception e) {
-	        	     srvtransaction.addtracking(formatter.format(mydate), nb, nb_credit,nb_debit,"KO","Erreur importation transaction "+t.getTransaction_id() + " avec un montant de "+t.getAmount(), args[1]);
+	        	     srvtransaction.addtracking(formatter.format(mydate), nb, nb_credit,nb_debit,total_debit,total_credit,balance,new_balance,"KO","Erreur importation transaction "+t.getTransaction_id() + " avec un montant de "+t.getAmount(), args[1]);
 	        	     }
 	               
 	        	   }
 	        	   else log.info("La transaction "+t.getTransaction_id()+" existe déja en BDD");
 	        	   }
-	          
 	  		    log.info("***************************Fin Import Transactions Bank , "+nb+" Nouvelles transactions importees************************");
-	          // tracking import 
-	          srvtransaction.addtracking(formatter.format(mydate), nb,nb_credit,nb_debit, "OK", "", args[1]);
+	          // tracking import
+	  		  srvtransaction.addtracking(formatter.format(mydate),nb,nb_credit,nb_debit,total_debit,total_credit,balance,new_balance, "OK", "", args[1]);
 	          //sending mail
 	           if (listc.size() >0 ) {
 	        	 Sendmail s = new Sendmail();

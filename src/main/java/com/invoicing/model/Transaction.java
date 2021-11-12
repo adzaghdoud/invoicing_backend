@@ -10,7 +10,7 @@ import org.hibernate.annotations.NamedNativeQuery;
 @Table(name="transactions")
 @NamedNativeQuery(
         name = "add_tracking_import",
-        query = "insert into suivi_import (date,nb_transaction_imported,nb_credit,nb_debit,state,comment,company)values(?,?,?,?,?,?,?)",
+        query = "insert into suivi_import (date,nb_transaction_imported,nb_credit,nb_debit,total_debit,total_credit,old_balance,new_balance,state,comment,company)values(?,?,?,?,?,?,?,?,?,?,?)",
                     resultClass=Transaction.class
     )
 public class Transaction {

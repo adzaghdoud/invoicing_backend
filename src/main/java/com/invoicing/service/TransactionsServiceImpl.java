@@ -31,12 +31,12 @@ public class TransactionsServiceImpl implements TransactionsService {
 		// TODO Auto-generated method stub
 		return dao.checkexistancetransaction(transactionID);
 	}
-
 	
 
-	public void addtracking(String t, int nbtransaction, int nb_credit, int nb_debit, String state, String comment,
-			String company) {
-		dao.addtracking(t, nbtransaction, nb_credit, nb_debit,state, comment, company);
+
+	public void addtracking(String t, int nbtransaction, int nb_credit, int nb_debit, double total_debit,
+			double total_credit, double old_balance,double new_balance,String state, String comment, String company) {
+		dao.addtracking(t, nbtransaction, nb_credit, nb_debit, total_debit, total_credit, old_balance,new_balance, state, comment, company);
 	}
 
 }
