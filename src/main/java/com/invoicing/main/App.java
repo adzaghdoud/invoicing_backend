@@ -139,7 +139,7 @@ public class App
 	        	 String text=
 	        			 "Bonjour "+args[1]+","
 	        			 +"<br/>"
-	        			 +"<p> Ci-dessous les nouvelles transactions importées </p>"
+	        			 +"<p> Ci-dessous les nouvelles transactions importées de votre compte "+srvcompany.find_bank_company(args[1])+"</p>"
 	        			 +"<br/>"
 	        	         +"<table width='100%' border='1' align='center'>"
 	        	                + "<tr align='center'>"

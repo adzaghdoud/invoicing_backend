@@ -13,5 +13,9 @@ public class CompanyServiceImpl implements CompanyService {
 	public String find_email_company( String rs) {
 		return dao.find_email_company( rs);
 	}
+
+	public String find_bank_company(String rs) {
+		return dao.find_bank_company(rs);
+	}
     
 }

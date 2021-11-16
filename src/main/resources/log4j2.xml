@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Configuration xmlns="http://logging.apache.org/log4j/2.0/config" status="WARN">
    <Properties>
-        <Property name="LogPath">/stor/invoicing/logs</Property>
+        <Property name="LogPath">/stor/invoicing-backend/logs</Property>
     </Properties>
     <Appenders>
             
