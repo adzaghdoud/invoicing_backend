@@ -50,7 +50,7 @@ public class App
 		 Date mydate = new Date();
          Timestamp ts=new Timestamp(mydate.getTime());
          SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-  	     
+  	     boolean flag= false;
   		if(file.length() == 0) {
   		log.error(args[0]+"est vide");	
   		}
@@ -123,13 +123,15 @@ public class App
 	        	     nb ++;
 	        	     }catch (Exception e) {
 	        	     srvtransaction.addtracking(formatter.format(mydate), nb, nb_credit,nb_debit,total_debit,total_credit,balance,new_balance,"KO","Erreur importation transaction "+t.getTransaction_id() + " avec un montant de "+t.getAmount(), args[1]);
+	        	     flag=true;
 	        	     }
 	               
 	        	   }
 	        	   else log.info("La transaction "+t.getTransaction_id()+" existe déja en BDD");
 	        	   }
 	  		    log.info("***************************Fin Import Transactions Bank , "+nb+" Nouvelles transactions importees************************");
-	          // tracking import
+	          if (flag) {
+	  		  // tracking import case ok 
 	  		  srvtransaction.addtracking(formatter.format(mydate),nb,nb_credit,nb_debit,total_debit,total_credit,balance,new_balance, "OK", "", args[1]);
 	          //sending mail
 	           if (listc.size() >0 ) {
@@ -171,7 +173,7 @@ public class App
 	           s.sendmail();
 	           }
 	           
-	          
+	          }      
 	           context.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -179,7 +181,7 @@ public class App
 		}
   		 
   		}
-  
+  		
          }else {
         	 
         	 log.error("Argument manquant , il faut mettre le path du json et le company"); 
