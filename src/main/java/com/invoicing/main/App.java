@@ -130,7 +130,7 @@ public class App
 	        	   else log.info("La transaction "+t.getTransaction_id()+" existe déja en BDD");
 	        	   }
 	  		    log.info("***************************Fin Import Transactions Bank , "+nb+" Nouvelles transactions importees************************");
-	          if (flag) {
+	          if (!flag) {
 	  		  // tracking import case ok 
 	  		  srvtransaction.addtracking(formatter.format(mydate),nb,nb_credit,nb_debit,total_debit,total_credit,balance,new_balance, "OK", "", args[1]);
 	          //sending mail
